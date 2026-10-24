@@ -1,0 +1,102 @@
+[
+  {
+    "question": "What is the difference between an ISA and a microarchitecture?",
+    "page": 2,
+    "answer": "The ISA is the contract between software and hardware (instructions, registers, data types, addressing modes, memory model). The microarchitecture is the actual hardware implementation of that ISA (pipeline, caches, branch predictor, execution units)."
+  },
+  {
+    "question": "What is the von Neumann bottleneck?",
+    "page": 2,
+    "answer": "Instructions and data share the same memory and bus, so the processor cannot fetch an instruction and read data in the same cycle."
+  },
+  {
+    "question": "What are the five stages of the classic RISC pipeline?",
+    "page": 3,
+    "answer": "IF (Instruction Fetch), ID (Instruction Decode), EX (Execute), MEM (Memory Access), WB (Write Back)."
+  },
+  {
+    "question": "How many cycles does a 5-stage pipeline need to execute 100 instructions with no stalls?",
+    "page": 3,
+    "answer": "5 + (100 - 1) = 104 cycles, instead of 500 without pipelining."
+  },
+  {
+    "question": "Does pipelining make a single instruction finish faster?",
+    "page": 3,
+    "answer": "No. Pipelining improves throughput, not the latency of one instruction; latency may even increase slightly due to pipeline register overhead."
+  },
+  {
+    "question": "What is forwarding in a pipeline?",
+    "page": 4,
+    "answer": "Forwarding (bypassing) sends a result directly from the EX/MEM or MEM/WB pipeline register to the ALU input of a following instruction without waiting for write back, solving RAW data hazards."
+  },
+  {
+    "question": "Why does a load-use hazard still need a stall even with forwarding?",
+    "page": 4,
+    "answer": "The loaded data is only available after the MEM stage, so the next instruction that uses it must wait one stall cycle (bubble)."
+  },
+  {
+    "question": "How does a 2-bit saturating counter branch predictor work?",
+    "page": 4,
+    "answer": "It changes its prediction only after two consecutive mispredictions, which works well for loops."
+  },
+  {
+    "question": "What are the three types of cache misses in the 3C model?",
+    "page": 5,
+    "answer": "Compulsory misses, capacity misses and conflict misses."
+  },
+  {
+    "question": "What is the AMAT if hit time is 1 ns, miss rate is 2% and miss penalty is 100 ns?",
+    "page": 5,
+    "answer": "AMAT = 1 + 0.02 x 100 = 3 ns."
+  },
+  {
+    "question": "What is the difference between write-back and write-through caches?",
+    "page": 6,
+    "answer": "Write-through updates both the cache and the next memory level on every write. Write-back only updates the cache and marks the line dirty, writing it to memory when the line is evicted, which reduces memory traffic."
+  },
+  {
+    "question": "What is a TLB and why is it needed?",
+    "page": 7,
+    "answer": "A Translation Lookaside Buffer is a small fast cache of recent virtual-to-physical address translations; without it every memory access would need an extra page table lookup in memory."
+  },
+  {
+    "question": "What is a load-store architecture?",
+    "page": 8,
+    "answer": "Only load and store instructions access memory; all arithmetic is done on registers. It is used by RISC processors."
+  },
+  {
+    "question": "If 80% of a program is made 10 times faster, what is the overall speedup according to Amdahl's Law?",
+    "page": 9,
+    "answer": "1 / (0.2 + 0.08) = about 3.57. The maximum possible speedup is 1 / 0.2 = 5."
+  },
+  {
+    "question": "processor time nikalne ka formula kya hai?",
+    "page": 9,
+    "answer": "CPU time = Instruction count x CPI x Clock period (or Instruction count x CPI / Clock rate)."
+  },
+  {
+    "question": "cache line ka size usually kitna hota hai?",
+    "page": 5,
+    "answer": "Usually 64 bytes."
+  },
+  {
+    "question": "APB mein ek transfer kam se kam kitne cycles leta hai?",
+    "page": 10,
+    "answer": "At least two clock cycles: a SETUP phase and an ACCESS phase."
+  },
+  {
+    "question": "What is a GPU?",
+    "page": null,
+    "answer": "Not in the notes."
+  },
+  {
+    "question": "Who invented the transistor?",
+    "page": null,
+    "answer": "Not in the notes."
+  },
+  {
+    "question": "Python mein garbage collection kaise kaam karti hai?",
+    "page": null,
+    "answer": "Not in the notes."
+  }
+]
