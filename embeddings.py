@@ -1,6 +1,8 @@
 import os
+from pathlib import Path
 os.environ["HF_HUB_DISABLE_SYMLINKS_WARNING"] = "1"
-os.environ.setdefault("HF_HUB_OFFLINE", "1")   # laptop par offline; server apni setting khud de sakta hai      # model download ho chuka hai, ab internet se check mat karo
+MODEL_CACHE = Path.home() / ".cache" / "huggingface" / "hub" / "models--intfloat--multilingual-e5-small"
+os.environ.setdefault("HF_HUB_OFFLINE", "1" if MODEL_CACHE.exists() else "0")   # model pehle se ho tabhi offline   # laptop par offline; server apni setting khud de sakta hai      # model download ho chuka hai, ab internet se check mat karo
 import numpy as np
 from sentence_transformers import SentenceTransformer
 

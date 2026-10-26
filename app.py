@@ -1,4 +1,6 @@
+import os
 import time
+from pathlib import Path
 
 import streamlit as st
 
@@ -6,7 +8,15 @@ st.set_page_config(page_title="CompArch Study Bot", page_icon="🖥️")
 st.title("🖥️ Computer Architecture Study Bot")
 st.caption("Notes se jawab, page number ke saath. English ya Roman Urdu mein poochiye.")
 
-with st.spinner("AI model load ho raha hai (pehli dafa ~1 minute)..."):
+try:
+    for key, value in st.secrets.items():        # Streamlit Cloud ke secrets -> environment variables
+        os.environ.setdefault(key, str(value))
+except Exception:
+    pass                                          # laptop par secrets file nahi hoti, .env kaam karti hai
+
+with st.spinner("AI model load ho raha hai (pehli dafa 1-2 minute)..."):
+    if not Path("index/vectors.npy").exists():   # server par index nahi hota (.gitignore), pehli dafa banao
+        import build_index  # noqa: F401
     from rag import answer
 
 if "messages" not in st.session_state:          # chat history, har rerun par bachi rehti hai
