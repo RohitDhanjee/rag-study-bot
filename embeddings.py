@@ -1,6 +1,6 @@
 import os
 os.environ["HF_HUB_DISABLE_SYMLINKS_WARNING"] = "1"
-os.environ["HF_HUB_OFFLINE"] = "1"       # model download ho chuka hai, ab internet se check mat karo
+os.environ.setdefault("HF_HUB_OFFLINE", "1")   # laptop par offline; server apni setting khud de sakta hai      # model download ho chuka hai, ab internet se check mat karo
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
