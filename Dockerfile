@@ -1,6 +1,6 @@
 FROM python:3.12-slim
 
-# HF Spaces app ko user 1000 ke naam se chalata hai
+# Run as a non-root user (uid 1000)
 RUN useradd -m -u 1000 user
 USER user
 ENV HOME=/home/user \
@@ -9,12 +9,12 @@ ENV HOME=/home/user \
     HF_HUB_OFFLINE=0
 WORKDIR $HOME/app
 
-# Pehle sirf libraries, taake code badalne par ye mehenga step dobara na chale
+# Install dependencies first so code changes do not re-run this slow step
 COPY --chown=user requirements.txt .
 RUN pip install --no-cache-dir --user torch --index-url https://download.pytorch.org/whl/cpu \
  && pip install --no-cache-dir --user -r requirements.txt
 
-# Phir code, aur build ke waqt hi model download + index tayyar
+# Then copy the code; download the model and build the index at build time
 COPY --chown=user . .
 RUN python build_index.py
 

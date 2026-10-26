@@ -6,33 +6,33 @@ import streamlit as st
 
 st.set_page_config(page_title="CompArch Study Bot", page_icon="🖥️")
 st.title("🖥️ Computer Architecture Study Bot")
-st.caption("Notes se jawab, page number ke saath. English ya Roman Urdu mein poochiye.")
+st.caption("Answers from the notes with page citations. Ask in English or Roman Urdu.")
 
 try:
-    for key, value in st.secrets.items():        # Streamlit Cloud ke secrets -> environment variables
+    for key, value in st.secrets.items():        # Streamlit Cloud secrets -> environment variables
         os.environ.setdefault(key, str(value))
 except Exception:
-    pass                                          # laptop par secrets file nahi hoti, .env kaam karti hai
+    pass                                          # no secrets file locally; .env is used instead
 
-with st.spinner("AI model load ho raha hai (pehli dafa 1-2 minute)..."):
-    if not Path("index/vectors.npy").exists():   # server par index nahi hota (.gitignore), pehli dafa banao
+with st.spinner("Loading the AI model (first load takes 1-2 minutes)..."):
+    if not Path("index/vectors.npy").exists():   # the index is not in git, so build it on first run
         import build_index  # noqa: F401
     from rag import answer
 
-if "messages" not in st.session_state:          # chat history, har rerun par bachi rehti hai
+if "messages" not in st.session_state:          # chat history survives reruns
     st.session_state.messages = []
 
-for m in st.session_state.messages:              # purani chat dobara dikhao
+for m in st.session_state.messages:              # redraw the previous chat
     with st.chat_message(m["role"]):
         st.markdown(m["content"])
 
-if question := st.chat_input("Sawal poochiye..."):
+if question := st.chat_input("Ask a question..."):
     st.session_state.messages.append({"role": "user", "content": question})
     with st.chat_message("user"):
         st.markdown(question)
 
     with st.chat_message("assistant"):
-        with st.spinner("Notes dhoond raha hoon..."):
+        with st.spinner("Searching the notes..."):
             start = time.time()
             reply, results = answer(question)
             latency = time.time() - start

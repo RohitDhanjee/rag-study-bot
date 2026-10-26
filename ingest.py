@@ -5,11 +5,11 @@ from pypdf import PdfReader
 
 
 def load_pdf(path):
-    """PDF ke har page ka saaf text nikalo, page number ke saath."""
+    """Extract clean text from every PDF page, keeping the page number."""
     reader = PdfReader(path)
     raw_pages = [(page.extract_text() or "").splitlines() for page in reader.pages]
 
-    # Jo line aadhe se zyada pages par repeat ho, wo header/footer hai
+    # A line repeated on more than half of the pages is a header or footer
     counts = Counter(line.strip() for lines in raw_pages for line in set(lines))
     repeated = {line for line, n in counts.items() if n > len(raw_pages) / 2}
 
@@ -18,7 +18,7 @@ def load_pdf(path):
         kept = [
             line for line in lines
             if line.strip() not in repeated
-            and not re.fullmatch(r"Page \d+", line.strip())   # "Page 3" jaisa footer
+            and not re.fullmatch(r"Page \d+", line.strip())   # footer such as "Page 3"
         ]
         text = " ".join(" ".join(kept).split())
         if text:
@@ -27,20 +27,20 @@ def load_pdf(path):
 
 
 def chunk_text(text, chunk_size=500, overlap=100):
-    """Text ko overlapping tukdon mein todo."""
+    """Split text into overlapping chunks."""
     chunks = []
     start = 0
     while start < len(text):
         end = start + chunk_size
         chunks.append(text[start:end])
-        if end >= len(text):               # aakhri tukda ho gaya, ruk jao
+        if end >= len(text):               # last chunk reached, stop
             break
-        start += chunk_size - overlap      # 650 aage barho
+        start += chunk_size - overlap      # move forward by chunk_size - overlap
     return chunks
 
 
 def build_chunks(pdf_path):
-    """Poori PDF -> chunks ki list, har chunk ke saath uska page number."""
+    """Whole PDF -> list of chunks, each with its page number."""
     all_chunks = []
     for p in load_pdf(pdf_path):
         for c in chunk_text(p["text"]):
@@ -54,12 +54,12 @@ def build_chunks(pdf_path):
 
 
 if __name__ == "__main__":
-    pdf = next(Path("data").glob("*.pdf"))   # data folder ki pehli PDF
+    pdf = next(Path("data").glob("*.pdf"))   # first PDF in the data folder
     chunks = build_chunks(pdf)
 
     print(f"PDF: {pdf.name}")
     print(f"Total chunks: {len(chunks)}")
-    print("\n--- Chunk 1 (aakhir) ---")
+    print("\n--- Chunk 1 (end) ---")
     print("..." + chunks[1]["text"][-200:])
-    print("\n--- Chunk 2 (shuru) ---")
+    print("\n--- Chunk 2 (start) ---")
     print(chunks[2]["text"][:200] + "...")

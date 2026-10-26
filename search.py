@@ -12,7 +12,7 @@ chunks = json.loads(Path("index/chunks.json").read_text(encoding="utf-8"))
 
 
 def tokenize(text):
-    """Text -> chhote lafzon ki list. 'load-store' jaise lafz ek hi token rehte hain."""
+    """Text -> list of lowercase words. Hyphenated terms like 'load-store' stay one token."""
     return re.findall(r"[a-z0-9]+(?:-[a-z0-9]+)*", text.lower())
 
 
@@ -20,7 +20,7 @@ bm25 = BM25Okapi([tokenize(c["text"]) for c in chunks])
 
 
 def semantic_search(query, n):
-    """Matlab se dhoondo: embeddings + cosine. Chunk index ki ranked list wapas do."""
+    """Search by meaning: embeddings + cosine. Returns a ranked list of chunk indices."""
     q = embed([query], task_type="RETRIEVAL_QUERY")[0]
     q = q / np.linalg.norm(q)
     scores = vectors @ q
@@ -28,13 +28,13 @@ def semantic_search(query, n):
 
 
 def keyword_search(query, n):
-    """Lafzon se dhoondo: BM25. Chunk index ki ranked list wapas do."""
+    """Search by words: BM25. Returns a ranked list of chunk indices."""
     scores = bm25.get_scores(tokenize(query))
     return list(np.argsort(scores)[::-1][:n])
 
 
 def search(query, k=3, n=20, rrf_k=60):
-    """Hybrid search: dono rankings ko Reciprocal Rank Fusion se jodo."""
+    """Hybrid search: merge both rankings with Reciprocal Rank Fusion."""
     fused = {}
     for ranking in (semantic_search(query, n), keyword_search(query, n)):
         for rank, i in enumerate(ranking):
@@ -45,7 +45,7 @@ def search(query, k=3, n=20, rrf_k=60):
 
 if __name__ == "__main__":
     while True:
-        query = input("\nSawal poochiye (khali Enter = exit): ").strip()
+        query = input("\nAsk a question (empty Enter = exit): ").strip()
         if not query:
             break
         for score, c in search(query):

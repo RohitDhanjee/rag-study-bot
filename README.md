@@ -9,7 +9,7 @@ A retrieval-augmented chatbot that answers questions from computer architecture 
 ## What it does
 
 - Answers only from the source PDF and cites pages, e.g. `[page 4]`
-- Says "Ye notes mein nahi hai." when the notes do not contain the answer, instead of making one up
+- Says "This is not in the notes." when the notes do not contain the answer, instead of making one up
 - Hybrid retrieval: semantic search (local multilingual embeddings) + keyword search (BM25), merged with Reciprocal Rank Fusion
 - Runs embeddings locally, so documents are never sent to an embedding API and there is no embedding cost
 - Evaluated with an automated test set and an LLM-as-a-judge

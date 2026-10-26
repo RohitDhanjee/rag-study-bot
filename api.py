@@ -26,7 +26,7 @@ class Answer(BaseModel):
 
 @app.get("/health")
 def health():
-    """Server zinda hai ya nahi: deploy platforms isay check karte hain."""
+    """Liveness check: deployment platforms poll this endpoint."""
     return {"status": "ok"}
 
 

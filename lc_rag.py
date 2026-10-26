@@ -18,15 +18,15 @@ from search import tokenize
 
 load_dotenv()
 
-# 1. Load: hamara apna load_pdf (header/footer cleaning ke saath) -> LangChain Documents
+# 1. Load: our own load_pdf (with header/footer cleaning) -> LangChain Documents
 pdf = next(Path("data").glob("*.pdf"))
 pages = [Document(page_content=p["text"], metadata={"page": p["page"]}) for p in load_pdf(pdf)]
 
-# 2. Split: paragraph -> sentence -> lafz par todne ki koshish karta hai
+# 2. Split: tries to break on paragraphs, then sentences, then words
 splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=100)
 docs = splitter.split_documents(pages)
 
-# 3. Embed + store: E5 ke "query: " / "passage: " prefixes khud batane parte hain
+# 3. Embed + store: E5's "query: " / "passage: " prefixes must be set explicitly
 embeddings = HuggingFaceEmbeddings(
     model_name="intfloat/multilingual-e5-small",
     encode_kwargs={"prompt": "passage: ", "normalize_embeddings": True},
@@ -38,7 +38,7 @@ else:
     vectorstore = FAISS.from_documents(docs, embeddings)
     vectorstore.save_local("faiss_index")
 
-# 4. Retrieve: semantic (FAISS) + keyword (BM25), RRF se jode hue
+# 4. Retrieve: semantic (FAISS) + keyword (BM25), merged with RRF
 bm25 = BM25Retriever.from_documents(docs, preprocess_func=tokenize, k=20)
 faiss = vectorstore.as_retriever(search_kwargs={"k": 20})
 retriever = EnsembleRetriever(retrievers=[faiss, bm25], weights=[0.5, 0.5])
@@ -61,14 +61,14 @@ def answer(question, k=3):
     context = "\n\n".join(f"[page {d.metadata['page']}]\n{d.page_content}" for d in found)
     reply = chain.invoke({"context": context, "question": question})
     results = [(0.0, {"page": d.metadata["page"], "text": d.page_content}) for d in found]
-    return reply, results            # rag.answer() jaisa format, taake evaluate.py wohi chale
+    return reply, results            # same format as rag.answer(), so evaluate.py works with both
 
 
 if __name__ == "__main__":
     while True:
-        question = input("\nSawal poochiye (khali Enter = exit): ").strip()
+        question = input("\nAsk a question (empty Enter = exit): ").strip()
         if not question:
             break
         reply, results = answer(question)
         print("\n" + reply)
-        print(f"\n(Search ne ye pages diye: {sorted({c['page'] for _, c in results})})")
+        print(f"\n(Retrieved pages: {sorted({c['page'] for _, c in results})})")
