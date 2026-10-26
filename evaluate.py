@@ -3,7 +3,8 @@ import sys
 import time
 from pathlib import Path
 
-from rag import answer, client
+from rag import client
+from lc_rag import answer      # LangChain version ko test karne ke liye
 
 NOT_FOUND = "Ye notes mein nahi hai."
 JUDGE_MODEL = "openai/gpt-oss-120b"      # judge chatbot se bada model ho to behtar

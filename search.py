@@ -33,7 +33,7 @@ def keyword_search(query, n):
     return list(np.argsort(scores)[::-1][:n])
 
 
-def search(query, k=3, n=10, rrf_k=60):
+def search(query, k=3, n=20, rrf_k=60):
     """Hybrid search: dono rankings ko Reciprocal Rank Fusion se jodo."""
     fused = {}
     for ranking in (semantic_search(query, n), keyword_search(query, n)):

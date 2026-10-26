@@ -67,7 +67,7 @@
   {
     "question": "If 80% of a program is made 10 times faster, what is the overall speedup according to Amdahl's Law?",
     "page": 9,
-    "answer": "1 / (0.2 + 0.08) = about 3.57. The maximum possible speedup is 1 / 0.2 = 5."
+    "answer": "About 3.57, from 1 / (0.2 + 0.08)."
   },
   {
     "question": "processor time nikalne ka formula kya hai?",
@@ -98,5 +98,9 @@
     "question": "Python mein garbage collection kaise kaam karti hai?",
     "page": null,
     "answer": "Not in the notes."
-  }
+  },
+    {"question": "what is load-store?", "page": 8, "answer": "An architecture where only load and store instructions access memory and arithmetic is done on registers."},
+  {"question": "TLB", "page": 7, "answer": "Translation Lookaside Buffer: a small fast cache of recent virtual-to-physical address translations."},
+  {"question": "INCR4 burst", "page": 10, "answer": "An AHB burst transfer type that moves 4 consecutive words (incrementing burst of 4)."},
+  {"question": "write-back", "page": 6, "answer": "Writes only update the cache and mark the line dirty; data is written to memory when the line is evicted."}
 ]
