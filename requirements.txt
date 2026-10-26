@@ -4,3 +4,12 @@ pypdf
 numpy
 python-dotenv
 rank-bm25
+fastapi
+uvicorn
+streamlit
+langchain-community
+langchain-classic
+langchain-huggingface
+langchain-groq
+langchain-text-splitters
+faiss-cpu
