@@ -2,7 +2,7 @@
 
 A retrieval-augmented chatbot that answers questions from computer architecture notes, cites the page it used, and refuses when the answer is not in the notes. Works in English and Roman Urdu.
 
-**Live demo:** _coming soon_
+**Live demo:** https://comparch-study-bot.streamlit.app/
 
 ![Python](https://img.shields.io/badge/Python-3.14-blue) ![Streamlit](https://img.shields.io/badge/UI-Streamlit-red) ![FastAPI](https://img.shields.io/badge/API-FastAPI-green)
 
